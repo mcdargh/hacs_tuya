@@ -2,7 +2,7 @@
   "domain": "tuya_custom",
   "name": "Tuya_custom",
   "documentation": "https://www.home-assistant.io/integrations/tuya",
-  "requirements": ["tuyaha==0.0.10"],
+  "requirements": ["tuyaha==0.0.11"],
   "codeowners": ["@mcdargh"],
   "config_flow": true,
   "iot_class": "cloud_polling",
