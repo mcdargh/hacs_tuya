@@ -1,4 +1,5 @@
 """Config flow for Tuya."""
+
 from __future__ import annotations
 
 import logging
@@ -20,8 +21,7 @@ from homeassistant.const import (
     CONF_UNIT_OF_MEASUREMENT,
     CONF_USERNAME,
     ENTITY_MATCH_NONE,
-    TEMP_CELSIUS,
-    TEMP_FAHRENHEIT,
+    UnitOfTemperature,
 )
 from homeassistant.core import callback
 import homeassistant.helpers.config_validation as cv
@@ -126,7 +126,6 @@ class TuyaConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         errors = {}
 
         if user_input is not None:
-
             self._country_code = str(user_input[CONF_COUNTRYCODE])
             self._password = user_input[CONF_PASSWORD]
             self._platform = user_input[CONF_PLATFORM]
@@ -369,7 +368,11 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
     def _get_climate_schema(curr_conf, device):
         """Create option schema for climate device."""
         unit = device.temperature_unit()
-        def_unit = TEMP_FAHRENHEIT if unit == "FAHRENHEIT" else TEMP_CELSIUS
+        def_unit = (
+            UnitOfTemperature.FAHRENHEIT
+            if unit == "FAHRENHEIT"
+            else UnitOfTemperature.CELSIUS
+        )
         supported_steps = device.supported_temperature_steps()
         default_step = device.target_temperature_step()
 
@@ -378,7 +381,12 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
                 vol.Optional(
                     CONF_UNIT_OF_MEASUREMENT,
                     default=curr_conf.get(CONF_UNIT_OF_MEASUREMENT, def_unit),
-                ): vol.In({TEMP_CELSIUS: "Celsius", TEMP_FAHRENHEIT: "Fahrenheit"}),
+                ): vol.In(
+                    {
+                        UnitOfTemperature.CELSIUS: "Celsius",
+                        UnitOfTemperature.FAHRENHEIT: "Fahrenheit",
+                    }
+                ),
                 vol.Optional(
                     CONF_TEMP_DIVIDER,
                     default=curr_conf.get(CONF_TEMP_DIVIDER, 0),

@@ -1,4 +1,5 @@
 """Support for the Tuya climate devices."""
+
 from datetime import timedelta
 
 from homeassistant.components.climate import (
@@ -22,8 +23,7 @@ from homeassistant.const import (
     ATTR_TEMPERATURE,
     CONF_PLATFORM,
     CONF_UNIT_OF_MEASUREMENT,
-    TEMP_CELSIUS,
-    TEMP_FAHRENHEIT,
+    UnitOfTemperature,
 )
 from homeassistant.core import callback
 from homeassistant.helpers.dispatcher import async_dispatcher_connect
@@ -118,7 +118,9 @@ class TuyaClimateEntity(TuyaDevice, ClimateEntity):
             return
         unit = config.get(CONF_UNIT_OF_MEASUREMENT)
         if unit:
-            self._tuya.set_unit("FAHRENHEIT" if unit == TEMP_FAHRENHEIT else "CELSIUS")
+            self._tuya.set_unit(
+                "FAHRENHEIT" if unit == UnitOfTemperature.TEMP_FAHRENHEIT else "CELSIUS"
+            )
         self._tuya.temp_divider = config.get(CONF_TEMP_DIVIDER, 0)
         self._tuya.curr_temp_divider = config.get(CONF_CURR_TEMP_DIVIDER, 0)
         self._set_temp_divided = config.get(CONF_SET_TEMP_DIVIDED, True)
@@ -160,8 +162,8 @@ class TuyaClimateEntity(TuyaDevice, ClimateEntity):
         """Return the unit of measurement used by the platform."""
         unit = self._tuya.temperature_unit()
         if unit == "FAHRENHEIT":
-            return TEMP_FAHRENHEIT
-        return TEMP_CELSIUS
+            return UnitOfTemperature.FAHRENHEIT
+        return UnitOfTemperature.CELSIUS
 
     @property
     def hvac_mode(self):
