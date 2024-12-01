@@ -119,7 +119,7 @@ class TuyaClimateEntity(TuyaDevice, ClimateEntity):
         unit = config.get(CONF_UNIT_OF_MEASUREMENT)
         if unit:
             self._tuya.set_unit(
-                "FAHRENHEIT" if unit == UnitOfTemperature.TEMP_FAHRENHEIT else "CELSIUS"
+                "FAHRENHEIT" if unit == UnitOfTemperature.FAHRENHEIT else "CELSIUS"
             )
         self._tuya.temp_divider = config.get(CONF_TEMP_DIVIDER, 0)
         self._tuya.curr_temp_divider = config.get(CONF_CURR_TEMP_DIVIDER, 0)
